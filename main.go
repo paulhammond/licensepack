@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"go/build"
+	"go/format"
 	"io/fs"
 	"log"
 	"os"
@@ -147,18 +148,12 @@ func main() {
 		fmt.Fprint(&buf, "\n\n")
 	}
 
-	f, err := os.Create(*file)
+	var src bytes.Buffer
+	_, err = src.Write([]byte("// " + comment + "\n"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
-
-	_, err = f.Write([]byte("// " + comment + "\n"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	templates.ExecuteTemplate(f, *tmpl+".tmpl", struct {
+	err = templates.ExecuteTemplate(&src, *tmpl+".tmpl", struct {
 		String string
 		Pkg    string
 		Var    string
@@ -167,4 +162,17 @@ func main() {
 		Pkg:    *pkg,
 		Var:    *variable,
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	formatted, err := format.Source(src.Bytes())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = os.WriteFile(*file, formatted, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
