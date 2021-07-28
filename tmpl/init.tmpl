@@ -1,5 +1,17 @@
 package {{ .Pkg }}
 
 func init() {
-	{{ .Var }} = {{ printf "%q" .String }};
+	{{ .Var }} = {{ (eval "licenses" .) | trim | quote }};
 }
+
+{{ define "licenses" }}
+{{ range .Modules }}
+## {{ .Name }}
+{{ range .Licenses }}
+{{ .Path }}:
+
+{{ .Contents | trim }}
+
+{{ end }}
+{{ end }}
+{{ end }}
