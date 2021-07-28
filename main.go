@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -153,12 +154,19 @@ func main() {
 			fmt.Printf("Error: could not find license for %s", k)
 			os.Exit(1)
 		}
+		sort.Slice(files, func(i, j int) bool {
+			return files[i].Path < files[j].Path
+		})
 
 		modules = append(modules, license.Module{
 			Name:     k,
 			Licenses: files,
 		})
 	}
+
+	sort.Slice(modules, func(i, j int) bool {
+		return (modules[i].Name == mainPath) || modules[i].Name < modules[j].Name
+	})
 
 	var src bytes.Buffer
 	_, err = src.Write([]byte("// " + comment + "\n"))
