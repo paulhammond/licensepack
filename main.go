@@ -147,7 +147,9 @@ func main() {
 					continue
 				}
 
-				files = append(files, license.File{Path: entry.Name(), Contents: string(contents)})
+				trimmed := strings.TrimSpace(string(contents))
+
+				files = append(files, license.File{Path: entry.Name(), Contents: trimmed})
 			}
 		}
 		if len(files) == 0 && !isMain {
