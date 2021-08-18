@@ -28,6 +28,7 @@ var (
 	pkg      = flag.String("pkg", "main", "package for generated code")
 	file     = flag.String("file", "licenses.go", "filename for generated code")
 	variable = flag.String("var", "Licenses", "variable name")
+	quiet    = flag.Bool("quiet", false, "only output error messages")
 	credits  = flag.Bool("credits", false, "show open source credits")
 	help     = flag.Bool("help", false, "show help")
 )
@@ -107,7 +108,9 @@ func main() {
 		os.Exit(2)
 	}
 
-	fmt.Printf("licensepack: generating %s\n", *file)
+	if !*quiet {
+		fmt.Printf("licensepack: generating %s\n", *file)
+	}
 
 	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedDeps | packages.NeedImports | packages.NeedName | packages.NeedModule}
 	pkgs, err := packages.Load(cfg, flag.Args()...)
