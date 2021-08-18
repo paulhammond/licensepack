@@ -190,6 +190,9 @@ func main() {
 	}
 
 	sort.Slice(modules, func(i, j int) bool {
+		if modules[j].Name == mainPath {
+			return false
+		}
 		return (modules[i].Name == mainPath) || modules[i].Name < modules[j].Name
 	})
 
