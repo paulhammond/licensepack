@@ -24,7 +24,7 @@ import (
 
 // Options
 var (
-	tmpl     = flag.String("tmpl", "init", "code template")
+	tmpl     = flag.String("tmpl", "string", "code template")
 	pkg      = flag.String("pkg", "main", "package for generated code")
 	file     = flag.String("file", "licenses.go", "filename for generated code")
 	variable = flag.String("var", "Licenses", "variable name")
