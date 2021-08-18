@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"embed"
+	"errors"
 	"flag"
 	"fmt"
 	"go/build"
@@ -40,13 +41,6 @@ var Licenses license.String
 //go:embed tmpl/*.tmpl
 var tmplFS embed.FS
 
-func mustFS(fs fs.FS, err error) fs.FS {
-	if err != nil {
-		panic(err)
-	}
-	return fs
-}
-
 func WrapQuote(indent, s string) string {
 	quoted := fmt.Sprintf("%q", s)
 	wrapped := strings.ReplaceAll(quoted, `\n`, `\n" +`+"\n"+indent+`"`)
@@ -54,7 +48,7 @@ func WrapQuote(indent, s string) string {
 	return cleaned
 }
 
-func templates() *template.Template {
+func parseTemplate(name string) (*template.Template, error) {
 	t := template.New("")
 	t.Funcs(template.FuncMap{
 		"eval": func(name string, arg interface{}) (string, error) {
@@ -68,8 +62,26 @@ func templates() *template.Template {
 		"trim":      strings.TrimSpace,
 		"wrapquote": WrapQuote,
 	})
-	template.Must(t.ParseFS(mustFS(fs.Sub(tmplFS, "tmpl")), "*"))
-	return t
+
+	fs2, err := fs.Sub(tmplFS, "tmpl")
+	if err != nil {
+		panic(err)
+	}
+
+	if regexp.MustCompile("^[a-z]+$").MatchString(name) {
+		name = name + ".tmpl"
+		_, err = t.ParseFS(fs2, name)
+	} else {
+		_, err = t.ParseFiles(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	t = t.Lookup(filepath.Base(name))
+	if t == nil {
+		return nil, errors.New("could not find template")
+	}
+	return t, nil
 }
 
 func main() {
@@ -184,8 +196,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	t := templates()
-	err = t.ExecuteTemplate(&src, *tmpl+".tmpl", struct {
+	t, err := parseTemplate(*tmpl)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = t.Execute(&src, struct {
 		Pkg     string
 		Var     string
 		Modules []license.Module
