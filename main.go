@@ -47,6 +47,13 @@ func mustFS(fs fs.FS, err error) fs.FS {
 	return fs
 }
 
+func WrapQuote(indent, s string) string {
+	quoted := fmt.Sprintf("%q", s)
+	wrapped := strings.ReplaceAll(quoted, `\n`, `\n" +`+"\n"+indent+`"`)
+	cleaned := strings.TrimSuffix(wrapped, ` +`+"\n"+indent+`""`)
+	return cleaned
+}
+
 func templates() *template.Template {
 	t := template.New("")
 	t.Funcs(template.FuncMap{
@@ -58,7 +65,8 @@ func templates() *template.Template {
 		"quote": func(s string) string {
 			return fmt.Sprintf("%q", s)
 		},
-		"trim": strings.TrimSpace,
+		"trim":      strings.TrimSpace,
+		"wrapquote": WrapQuote,
 	})
 	template.Must(t.ParseFS(mustFS(fs.Sub(tmplFS, "tmpl")), "*"))
 	return t

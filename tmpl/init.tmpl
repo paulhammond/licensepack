@@ -1,7 +1,7 @@
 package {{ .Pkg }}
 
 func init() {
-	{{ .Var }} = {{ (eval "licenses" .) | trim | quote }};
+	{{ .Var }} = {{ (eval "licenses" .) | wrapquote "\t\t" }}
 }
 
 {{ define "licenses" -}}
