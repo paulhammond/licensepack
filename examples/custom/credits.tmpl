@@ -1,0 +1,24 @@
+package {{ .Pkg }}
+
+func init() {
+	Licenses = {{ (eval "credits" .) | wrapquote "\t\t" }}
+}
+
+{{ define "credits" -}}
+This software is built using the following packages:
+
+{{ range .Modules -}}
+• {{ .Name }}
+{{ end }}
+
+The licenses for those packages are:
+
+{{ range $index, $module := .Modules -}}
+{{ range $module.Licenses -}}
+{{ $module.Name }}: {{ .Path }}:
+
+{{ .Contents }}
+
+{{ end -}}
+{{ end -}}
+{{ end -}}
