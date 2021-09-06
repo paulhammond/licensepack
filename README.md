@@ -66,7 +66,8 @@ By default licensepack generates code wrapped in an `init()` function so that
 you can avoid committing the generated file without complaints from the Go
 tooling. By recreating the file every time your project is compiled you ensure
 the license information is always kept up to date, at the cost of adding
-`go generate` to your build scripts.
+`go generate` to your build scripts. This is customizable, see below for
+details.
 
 ### Adjusting the generated code
 
@@ -88,6 +89,16 @@ that creates a struct instead of a string:
 ```
 
 A complete example of using this template is provided in `examples/struct`.
+
+If you believe that `init()` functions are always bad or would prefer to commit
+the generated file, then templates that generate a variable, const or function
+declaration are also provided with the `-var`, `-const`, and `-func` suffixes.
+For example:
+
+```
+//go:generate go run github.com/paulhammond/licensepack -tmpl struct-func .
+//go:generate go run github.com/paulhammond/licensepack -tmpl string-const .
+```
 
 ### Custom templates
 

@@ -69,7 +69,7 @@ func parseTemplate(name string) (*template.Template, error) {
 		panic(err)
 	}
 
-	if regexp.MustCompile("^[a-z]+$").MatchString(name) {
+	if regexp.MustCompile("^[a-z\\-]+$").MatchString(name) {
 		name = name + ".tmpl"
 		_, err = t.ParseFS(fs2, name)
 	} else {

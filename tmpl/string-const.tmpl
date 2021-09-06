@@ -1,0 +1,16 @@
+package {{ .Pkg }}
+
+const {{ .Var }} = {{ (eval "licenses" .) | wrapquote "\t\t" }}
+
+{{ define "licenses" -}}
+{{ range .Modules -}}
+## {{ .Name }}
+
+{{ range .Licenses -}}
+{{ .Path }}:
+
+{{ .Contents }}
+
+{{ end -}}
+{{ end -}}
+{{ end -}}

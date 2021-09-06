@@ -1,0 +1,19 @@
+package {{ .Pkg }}
+
+import "github.com/paulhammond/licensepack/license"
+
+var {{ .Var }} = []license.Module{
+    {{- range .Modules }}
+    {
+        Name: {{.Name | printf "%q" }},
+        Licenses: []license.File{
+            {{- range .Licenses }}
+            {
+                Path: {{ .Path | printf "%q" }},
+                Contents: {{ .Contents | wrapquote "\t\t\t\t\t\t" }},
+            },
+            {{- end }}
+        },
+    },
+    {{- end }}
+}

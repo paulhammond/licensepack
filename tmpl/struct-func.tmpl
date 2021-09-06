@@ -2,8 +2,8 @@ package {{ .Pkg }}
 
 import "github.com/paulhammond/licensepack/license"
 
-func init() {
-	{{ .Var }} = []license.Module{
+func {{ .Var }}() []license.Module {
+	return []license.Module{
 		{{- range .Modules }}
 		{
 			Name: {{.Name | printf "%q" }},
