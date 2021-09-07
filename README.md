@@ -119,8 +119,8 @@ file. For example:
 
 A complete example is provided in `examples/custom`. The built in templates can
 be used as a starting point and hopefully demonstrate usage of the available
-template helper functions. The generated code is formatted before being written
-to a file so you can be lax with your whitespace.
+template helper functions. By default the generated code is formatted before
+being written to a file so you can be lax with your whitespace.
 
 ### Keeping licensepack in go.mod
 

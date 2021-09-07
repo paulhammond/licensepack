@@ -80,7 +80,7 @@ func main() {
 		pkg      = flag.String("pkg", "main", "package for generated code")
 		file     = flag.String("file", "licenses.go", "filename for generated code (- for stdout)")
 		variable = flag.String("var", "Licenses", "variable name")
-		nofmt    = flag.Bool("nofmt", false, "run output through go fmt")
+		nofmt    = flag.Bool("nofmt", false, "do not run output through gofmt")
 		credits  = flag.Bool("credits", false, "show open source credits")
 		help     = flag.Bool("help", false, "show help")
 	)
