@@ -80,7 +80,6 @@ func main() {
 		file     = flag.String("file", "licenses.go", "filename for generated code (- for stdout)")
 		variable = flag.String("var", "Licenses", "variable name")
 		nofmt    = flag.Bool("nofmt", false, "run output through go fmt")
-		quiet    = flag.Bool("quiet", false, "only output error messages")
 		credits  = flag.Bool("credits", false, "show open source credits")
 		help     = flag.Bool("help", false, "show help")
 	)
@@ -105,10 +104,6 @@ func main() {
 	if *help || len(flag.Args()) == 0 {
 		flag.Usage()
 		os.Exit(2)
-	}
-
-	if !*quiet && *file != "-" {
-		fmt.Printf("licensepack: generating %s\n", *file)
 	}
 
 	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedDeps | packages.NeedImports | packages.NeedName | packages.NeedModule}
