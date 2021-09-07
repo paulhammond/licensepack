@@ -28,6 +28,7 @@ var (
 	pkg      = flag.String("pkg", "main", "package for generated code")
 	file     = flag.String("file", "licenses.go", "filename for generated code")
 	variable = flag.String("var", "Licenses", "variable name")
+	nofmt    = flag.Bool("nofmt", false, "run output through go fmt")
 	quiet    = flag.Bool("quiet", false, "only output error messages")
 	credits  = flag.Bool("credits", false, "show open source credits")
 	help     = flag.Bool("help", false, "show help")
@@ -197,10 +198,6 @@ func main() {
 	})
 
 	var src bytes.Buffer
-	_, err = src.Write([]byte("// " + comment + "\n"))
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	t, err := parseTemplate(*tmpl)
 	if err != nil {
@@ -210,22 +207,27 @@ func main() {
 	err = t.Execute(&src, struct {
 		Pkg     string
 		Var     string
+		Comment string
 		Modules []license.Module
 	}{
 		Pkg:     *pkg,
 		Var:     *variable,
 		Modules: modules,
+		Comment: comment,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	formatted, err := format.Source(src.Bytes())
-	if err != nil {
-		log.Fatal(err)
+	output := src.Bytes()
+	if !*nofmt {
+		output, err = format.Source(src.Bytes())
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	err = os.WriteFile(*file, formatted, 0666)
+	err = os.WriteFile(*file, output, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}

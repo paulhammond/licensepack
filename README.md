@@ -100,6 +100,14 @@ For example:
 //go:generate go run github.com/paulhammond/licensepack -tmpl string-const .
 ```
 
+If you’d prefer to generate plain text output, perhaps because you’d like to
+embed licensing information using a different mechanism, there is a plain text
+template available. To use this you’ll need to disable gofmt. For example:
+
+```
+//go:generate go run github.com/paulhammond/licensepack -file licenses.txt -nofmt -tmpl text ./cmd
+```
+
 ### Custom templates
 
 If you’d like to customize the template you can provide the path to a template
