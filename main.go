@@ -26,7 +26,7 @@ import (
 var (
 	tmpl     = flag.String("tmpl", "string", "code template")
 	pkg      = flag.String("pkg", "main", "package for generated code")
-	file     = flag.String("file", "licenses.go", "filename for generated code")
+	file     = flag.String("file", "licenses.go", "filename for generated code (- for stdout)")
 	variable = flag.String("var", "Licenses", "variable name")
 	nofmt    = flag.Bool("nofmt", false, "run output through go fmt")
 	quiet    = flag.Bool("quiet", false, "only output error messages")
@@ -109,7 +109,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	if !*quiet {
+	if !*quiet && *file != "-" {
 		fmt.Printf("licensepack: generating %s\n", *file)
 	}
 
@@ -227,7 +227,12 @@ func main() {
 		}
 	}
 
-	err = os.WriteFile(*file, output, 0666)
+	if *file == "-" {
+		_, err = fmt.Print(string(output))
+	} else {
+		err = os.WriteFile(*file, output, 0666)
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
