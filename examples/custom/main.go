@@ -7,14 +7,14 @@ import (
 )
 
 //go:generate go run github.com/paulhammond/licensepack -tmpl ./credits.tmpl .
-var Licenses string
+var licenses string
 
 func main() {
 	var credits = flag.Bool("credits", false, "show open source credits")
 
 	flag.Parse()
 	if *credits {
-		fmt.Println(Licenses)
+		fmt.Println(licenses)
 		os.Exit(0)
 	}
 

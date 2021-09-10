@@ -2,7 +2,7 @@
 package main
 
 func init() {
-	Licenses = "## github.com/paulhammond/licensepack\n" +
+	licenses = "## github.com/paulhammond/licensepack\n" +
 		"\n" +
 		"LICENSE.txt:\n" +
 		"\n" +

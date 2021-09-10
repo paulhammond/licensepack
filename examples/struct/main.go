@@ -10,7 +10,7 @@ import (
 )
 
 //go:generate go run github.com/paulhammond/licensepack -tmpl struct .
-var Licenses []license.Module
+var licenses []license.Module
 
 func main() {
 	var credits = flag.Bool("credits", false, "show open source credits")
@@ -18,7 +18,7 @@ func main() {
 	flag.Parse()
 
 	if *credits {
-		for _, module := range Licenses {
+		for _, module := range licenses {
 			if module.Name == "github.com/paulhammond/licensepack/examples/struct" {
 				continue
 			}

@@ -13,11 +13,12 @@ licensepack to your `go.mod` file:
 go get -d github.com/paulhammond/licensepack
 ```
 
-Then add a `go-generate` line to your code, along with a variable definition:
+Then add a `go-generate` line to your code, along with a variable definition. By
+default licensepack uses a variable called licenses:
 
 ```
 //go:generate go run github.com/paulhammond/licensepack ./path/to/main
-var Licenses string
+var licenses string
 ```
 
 Then run `go generate`:
@@ -34,7 +35,7 @@ this:
 package main
 
 func init() {
-	Licenses = "## github.com/your/package\n" +
+	licenses = "## github.com/your/package\n" +
 		"\n" +
 		"LICENSE:\n" +
 		"\n" +
@@ -43,7 +44,7 @@ func init() {
 }
 ```
 
-Then you can add some code to output the contents of the `Licenses` variable,
+Then you can add some code to output the contents of the `licenses` variable,
 perhaps if a command line flag is provided:
 
 ```
@@ -53,7 +54,7 @@ func main(){
 
 	flag.Parse()
 	if *credits {
-		fmt.Println(Licenses)
+		fmt.Println(licenses)
 		os.Exit(0)
 	}
 	…
