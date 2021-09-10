@@ -1,8 +1,8 @@
 # licensepack
 
 licensepack generates Go source files containing licensing information for all
-dependencies of your Go project. This should help distributors of your software
-follow the terms of most open source licenses.
+dependencies used by your Go project. This should help distributors of your
+software follow the terms of most open source licenses.
 
 ## Usage
 
@@ -24,7 +24,7 @@ var licenses string
 Then run `go generate`:
 
 ```
-go generate
+go generate ./...
 ```
 
 A file called `licenses.go` will be created with contents looking something like
@@ -39,7 +39,7 @@ func init() {
 		"\n" +
 		"LICENSE:\n" +
 		"\n" +
-		"Copyright (c) 2009 Your Name. All rights reserved.\n" +
+		"Copyright (c) 2021 Your Name. All rights reserved.\n" +
 		…
 }
 ```
@@ -76,7 +76,8 @@ Simple changes, including package name, variable name and the output filename
 can be adjusted with command line flags:
 
 ```
-//go:generate go run github.com/paulhammond/licensepack -pkg cmd -var Credits -file path/to/credits.go ./cmd
+//go:generate go run github.com/paulhammond/licensepack -pkg cmd -var Credits -file path/to/credits.go .
+var Credits string
 ```
 
 ### Built in templates
@@ -86,7 +87,7 @@ output to meet your needs. A few built in templates are provided, including one
 that creates a struct instead of a string:
 
 ```
-//go:generate go run github.com/paulhammond/licensepack ./cmd -tmpl struct
+//go:generate go run github.com/paulhammond/licensepack -tmpl struct .
 ```
 
 A complete example of using this template is provided in `examples/struct`.
@@ -106,7 +107,7 @@ embed licensing information using a different mechanism, there is a plain text
 template available. To use this you’ll need to disable gofmt. For example:
 
 ```
-//go:generate go run github.com/paulhammond/licensepack -file licenses.txt -nofmt -tmpl text ./cmd
+//go:generate go run github.com/paulhammond/licensepack -file licenses.txt -nofmt -tmpl text .
 ```
 
 ### Custom templates
@@ -115,7 +116,7 @@ If you’d like to customize the template you can provide the path to a template
 file. For example:
 
 ```
-//go:generate go run github.com/paulhammond/licensepack -tmpl ./licenses.tmpl ./cmd
+//go:generate go run github.com/paulhammond/licensepack -tmpl ./licenses.tmpl .
 ```
 
 A complete example is provided in `examples/custom`. The built in templates can
@@ -147,4 +148,4 @@ dependencies that are not actually linked into the compiled binary.
 
 ## Credits/License
 
-Run `licensecheck -credits` for license information.
+Run `licensepack -credits` for license information.
