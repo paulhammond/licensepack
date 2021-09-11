@@ -128,16 +128,19 @@ being written to a file so you can be lax with your whitespace.
 
 If you follow the instructions above, then run `go mod tidy`, you will find that
 licensepack has been removed from your `go.mod` file. To prevent this from
-happening you have two options:
+happening make a [`tools.go` file][tools]. For example:
 
-1. If you have an existing `tools.go` file, as [recommended by the Go team][tools],
-you can add licensepack to it.
+```
+// +build tools
 
-2. If that seems like too much work you can import
-`github.com/paulhammond/licensepack/license` in your code and declare your
-variable as a `license.String`, which is an alias for `string`.
+package tools
 
-[tools]: https://github.com/golang/go/issues/25922
+import (
+	_ "github.com/paulhammond/licensepack"
+)
+```
+
+[tools]: https://github.com/golang/go/issues/25922#issuecomment-412992431
 
 ## Alternatives
 
