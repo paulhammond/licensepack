@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/paulhammond/licensepack/license"
 )
 
@@ -18,19 +18,23 @@ func main() {
 	flag.Parse()
 
 	if *credits {
+
+		data := map[string]map[string]string{}
+
 		for _, module := range licenses {
 			if module.Name == "github.com/paulhammond/licensepack/examples/struct" {
 				continue
 			}
-			color.New(color.FgCyan, color.Bold).Println(module.Name)
-			fmt.Println("")
+			files := map[string]string{}
 			for _, file := range module.Licenses {
-				color.New(color.FgWhite, color.Bold).Println(file.Path)
-				fmt.Println("")
-				color.White(file.Contents)
-				fmt.Println("")
+				files[file.Path] = file.Contents
 			}
+			data[module.Name] = files
 		}
+
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		enc.Encode(&data)
 
 		os.Exit(0)
 	}
