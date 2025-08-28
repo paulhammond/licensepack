@@ -67,6 +67,7 @@ func main() {
 	var (
 		tmpl        = flag.String("tmpl", "text", "template")
 		file        = flag.String("file", "credits.txt", "filename for generated code (- for stdout)")
+		notrim      = flag.Bool("notrim", false, "do not trim whitespace from output")
 		showCredits = flag.Bool("credits", false, "show open source credits")
 		help        = flag.Bool("help", false, "show help")
 	)
@@ -197,6 +198,9 @@ func main() {
 	}
 
 	output := src.Bytes()
+	if !*notrim {
+		output = append(bytes.TrimSpace(output), '\n')
+	}
 
 	if *file == "-" {
 		_, err = fmt.Print(string(output))
