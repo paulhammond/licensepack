@@ -17,6 +17,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/mitchellh/go-wordwrap"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -57,6 +58,7 @@ func main() {
 		tmpl        = flag.String("tmpl", "default", "template")
 		file        = flag.String("file", "credits.txt", "filename for generated code (- for stdout)")
 		notrim      = flag.Bool("notrim", false, "do not trim whitespace from output")
+		wrap        = flag.Uint("wrap", 120, "width to wrap text at (0 to disable)")
 		showCredits = flag.Bool("credits", false, "show open source credits")
 		help        = flag.Bool("help", false, "show help")
 	)
@@ -184,15 +186,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	output := src.Bytes()
+	output := src.String()
 	if !*notrim {
-		output = append(bytes.TrimSpace(output), '\n')
+		output = strings.TrimSpace(output) + "\n"
+	}
+	if *wrap != 0 {
+		output = wordwrap.WrapString(output, *wrap)
 	}
 
 	if *file == "-" {
-		_, err = fmt.Print(string(output))
+		_, err = fmt.Print(output)
 	} else {
-		err = os.WriteFile(*file, output, 0o666)
+		err = os.WriteFile(*file, []byte(output), 0o666)
 	}
 
 	if err != nil {
