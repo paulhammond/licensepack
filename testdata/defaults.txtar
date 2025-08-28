@@ -1,0 +1,3 @@
+cd ${src}
+licensepack -file ${WORK}/credits.txt -tmpl text -nofmt .
+cmp credits.txt ${WORK}/credits.txt
