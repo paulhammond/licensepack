@@ -13,7 +13,7 @@ licensepack to your `go.mod` file:
 go get -tool github.com/paulhammond/licensepack
 ```
 
-Then add a `go-generate` line to your code:
+Then add a [`go-generate`](https://go.dev/blog/generate) line to your code:
 ```
 //go:generate go tool licensepack ./path/to/main
 ```
@@ -36,7 +36,8 @@ Copyright (c) 2021 Your Name. All rights reserved.
 …
 ```
 
-You can then use the embed package to make that file available as a string:
+You can then use the [embed package](https://pkg.go.dev/embed) to make that file
+available in your code:
 
 ```
 //go:embed credits.txt
@@ -85,6 +86,13 @@ be used as a starting point and hopefully demonstrate usage of the available
 template helper functions.
 
 ## Alternatives
+
+[go-licenses](https://github.com/google/go-licenses) can generate similar
+reports to licensepack (see the markdown example in the README). It has a lot
+of additional functionality that licensepack lacks, including the ability to
+detect a name for each license, but also has a lot of dependencies. If
+licencepack doesn't have the functionality you need then this is likely the best
+option for you.
 
 [go-licence-detector](https://github.com/elastic/go-licence-detector) also
 generates license notices. It has many options not available in licensepack, but
