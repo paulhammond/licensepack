@@ -104,7 +104,7 @@ func main() {
 
 	if *help || len(flag.Args()) == 0 {
 		flag.Usage()
-		os.Exit(2)
+		os.Exit(0)
 	}
 
 	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedDeps | packages.NeedImports | packages.NeedName | packages.NeedModule}

@@ -1,0 +1,7 @@
+licensepack
+
+! stdout .
+
+stderr 'Usage: licensepack \[options\] \[pkg\]'
+stderr '-credits'
+stderr 'show open source credits'
