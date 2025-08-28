@@ -41,7 +41,7 @@ func WrapQuote(indent, s string) string {
 func parseTemplate(name string) (*template.Template, error) {
 	t := template.New("")
 	t.Funcs(template.FuncMap{
-		"eval": func(name string, arg interface{}) (string, error) {
+		"eval": func(name string, arg any) (string, error) {
 			var buf bytes.Buffer
 			err := t.ExecuteTemplate(&buf, name, arg)
 			return buf.String(), err
@@ -58,7 +58,7 @@ func parseTemplate(name string) (*template.Template, error) {
 		panic(err)
 	}
 
-	if regexp.MustCompile("^[a-z\\-]+$").MatchString(name) {
+	if regexp.MustCompile(`^[a-z\-]+$`).MatchString(name) {
 		name = name + ".tmpl"
 		_, err = t.ParseFS(fs2, name)
 	} else {
@@ -147,7 +147,7 @@ func main() {
 			re := regexp.MustCompile(`(?i)(licen(c|s)e|notice|copying)`)
 			if re.MatchString(entry.Name()) {
 				path := filepath.Join(v, entry.Name())
-				if ".go" == filepath.Ext(path) {
+				if filepath.Ext(path) == ".go" {
 					continue
 				}
 
@@ -227,7 +227,7 @@ func main() {
 	if *file == "-" {
 		_, err = fmt.Print(string(output))
 	} else {
-		err = os.WriteFile(*file, output, 0666)
+		err = os.WriteFile(*file, output, 0o666)
 	}
 
 	if err != nil {
