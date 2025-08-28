@@ -1,20 +1,22 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"os"
 )
 
 //go:generate go run github.com/paulhammond/licensepack -tmpl ./credits.tmpl .
-var licenses string
+//go:embed credits.txt
+var credits string
 
 func main() {
-	var credits = flag.Bool("credits", false, "show open source credits")
+	showCredits := flag.Bool("credits", false, "show open source credits")
 
 	flag.Parse()
-	if *credits {
-		fmt.Println(licenses)
+	if *showCredits {
+		fmt.Println(credits)
 		os.Exit(0)
 	}
 

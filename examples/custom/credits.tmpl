@@ -1,16 +1,8 @@
-package {{ .Pkg }}
-
-func init() {
-	licenses = {{ (eval "credits" .) | wrapquote "\t\t" }}
-}
-
-{{ define "credits" -}}
 This software is built using the following packages:
 
 {{ range .Modules -}}
-• {{ .Name }}
+• {{ .Name }}
 {{ end }}
-
 The licenses for those packages are:
 
 {{ range $index, $module := .Modules -}}
@@ -19,6 +11,5 @@ The licenses for those packages are:
 
 {{ .Contents }}
 
-{{ end -}}
 {{ end -}}
 {{ end -}}
