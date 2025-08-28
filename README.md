@@ -62,10 +62,19 @@ func main(){
 
 A complete example is available in [`examples/hello`](examples/hello).
 
+### Built in templates
+
+licensepack uses `text/template`, allowing you to customize the output to meet
+your needs. A few built in templates are provided which provide differing levels
+of repetitiveness:
+
+//go:generate go tool licensepack -tmpl short path/to/main
+//go:generate go tool licensepack -tmpl long path/to/main
+
 ### Custom templates
 
-If you’d like to customize the template you can provide the path to a file
-containing `text/template` code. For example:
+If you’d like to customize the template you can provide the path to a template
+file. For example:
 
 ```
 //go:generate go tool licensepack -tmpl ./licenses.tmpl .

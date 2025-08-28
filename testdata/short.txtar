@@ -1,6 +1,10 @@
-## github.com/paulhammond/licensepack
+cd ${src}
+licensepack -file ${WORK}/got -tmpl short .
+cd ${WORK}
 
-LICENSE.txt:
+cmp got want
+-- want --
+## github.com/paulhammond/licensepack LICENSE.txt
 
 Copyright © 2021 Paul Hammond
 
@@ -22,12 +26,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## golang.org/pkg
-## golang.org/x/mod
-## golang.org/x/sync
-## golang.org/x/tools
-
-LICENSE:
+## golang.org/pkg LICENSE
+## golang.org/x/mod LICENSE
+## golang.org/x/sync LICENSE
+## golang.org/x/tools LICENSE
 
 Copyright 2009 The Go Authors.
 

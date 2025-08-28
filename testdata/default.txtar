@@ -1,3 +1,12 @@
+cd ${src}
+licensepack -file ${WORK}/got .
+cd ${WORK}
+
+cmp got want
+
+# note that this file does not include go-cmp or testscript, which are only used
+# in tests and so is not part of the binary build
+-- want --
 ## github.com/paulhammond/licensepack
 
 LICENSE.txt:

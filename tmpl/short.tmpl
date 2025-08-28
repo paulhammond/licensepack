@@ -1,0 +1,10 @@
+{{ range .FileGroups -}}
+{{ range .Names -}}
+## {{ . }}
+{{ end }}
+{{ range .Licenses -}}
+
+{{ .Contents }}
+
+{{ end -}}
+{{ end -}}

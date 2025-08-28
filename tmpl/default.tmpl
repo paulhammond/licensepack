@@ -1,0 +1,11 @@
+{{ range .ModuleGroups -}}
+{{ range .Names -}}
+## {{ . }}
+{{ end }}
+{{ range .Licenses -}}
+{{ .Path }}:
+
+{{ .Contents }}
+
+{{ end -}}
+{{ end -}}

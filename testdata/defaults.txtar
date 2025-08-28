@@ -1,3 +1,0 @@
-cd ${src}
-licensepack -file ${WORK}/credits.txt .
-cmp credits.txt ${WORK}/credits.txt

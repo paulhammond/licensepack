@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"embed"
 	"errors"
 	"flag"
@@ -28,18 +29,6 @@ var credits string
 //go:embed tmpl/*.tmpl
 var tmplFS embed.FS
 
-// Module represents a Go module. Some modules have more than one license file.
-type Module struct {
-	Name     string
-	Licenses []File
-}
-
-// File represents a license file for a Go module.
-type File struct {
-	Path     string
-	Contents string
-}
-
 func parseTemplate(name string) (*template.Template, error) {
 	t := template.New("")
 	fs2, err := fs.Sub(tmplFS, "tmpl")
@@ -65,7 +54,7 @@ func parseTemplate(name string) (*template.Template, error) {
 
 func main() {
 	var (
-		tmpl        = flag.String("tmpl", "text", "template")
+		tmpl        = flag.String("tmpl", "default", "template")
 		file        = flag.String("file", "credits.txt", "filename for generated code (- for stdout)")
 		notrim      = flag.Bool("notrim", false, "do not trim whitespace from output")
 		showCredits = flag.Bool("credits", false, "show open source credits")
@@ -181,6 +170,8 @@ func main() {
 		return (modules[i].Name == mainPath) || modules[i].Name < modules[j].Name
 	})
 
+	set := ModuleSet{Modules: modules}
+
 	var src bytes.Buffer
 
 	t, err := parseTemplate(*tmpl)
@@ -188,11 +179,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = t.Execute(&src, struct {
-		Modules []Module
-	}{
-		Modules: modules,
-	})
+	err = t.Execute(&src, set)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -211,4 +198,87 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// A ModuleSet is a set of Modules
+type ModuleSet struct {
+	Modules []Module
+}
+
+// FileGroups returns groups of individual license files. All files in a group
+// have the same content.
+func (s ModuleSet) FileGroups() []*Group {
+	groups := []*Group{}
+	lookup := map[string]*Group{}
+	for _, m := range s.Modules {
+		for _, f := range m.Licenses {
+			h := f.hash()
+			name := m.Name + " " + f.Path
+			if found, ok := lookup[h]; ok {
+				found.Names = append(found.Names, name)
+			} else {
+				s := &Group{
+					Names:    []string{name},
+					Licenses: []File{f},
+				}
+				lookup[h] = s
+				groups = append(groups, s)
+			}
+		}
+	}
+	return groups
+}
+
+// ModuleGroups returns groups of Modules. All modules in a group have identical
+// license file paths and contents.
+func (s ModuleSet) ModuleGroups() []*Group {
+	moduleGroups := []*Group{}
+	moduleMap := map[string]*Group{}
+	for _, m := range s.Modules {
+		h := m.hash()
+		if found, ok := moduleMap[h]; ok {
+			found.Names = append(found.Names, m.Name)
+		} else {
+			s := &Group{
+				Names:    []string{m.Name},
+				Licenses: m.Licenses,
+			}
+			moduleMap[h] = s
+			moduleGroups = append(moduleGroups, s)
+		}
+	}
+	return moduleGroups
+}
+
+// A Group is a grouping of identical license files.
+type Group struct {
+	Names    []string
+	Licenses []File
+}
+
+// A Module represents a Go module. Some modules have more than one license file.
+type Module struct {
+	Name     string
+	Licenses []File
+}
+
+func (m Module) hash() string {
+	h := sha256.New()
+	for _, f := range m.Licenses {
+		fmt.Fprintln(h, f.Path)
+		fmt.Fprintln(h, f.Contents)
+	}
+	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+// A File represents an individual license file for a Go module.
+type File struct {
+	Path     string
+	Contents string
+}
+
+func (f File) hash() string {
+	h := sha256.New()
+	fmt.Fprintln(h, f.Contents)
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
