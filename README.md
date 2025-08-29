@@ -69,8 +69,10 @@ licensepack uses `text/template`, allowing you to customize the output to meet
 your needs. A few built in templates are provided which provide differing levels
 of repetitiveness:
 
+```
 //go:generate go tool licensepack -tmpl short path/to/main
 //go:generate go tool licensepack -tmpl long path/to/main
+```
 
 ### Custom templates
 
